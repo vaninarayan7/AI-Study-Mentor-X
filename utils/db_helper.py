@@ -99,6 +99,15 @@ def get_document(doc_id):
     conn.close()
     return doc
 
+def delete_document(doc_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM quizzes WHERE document_id = ?", (doc_id,))
+    cursor.execute("DELETE FROM study_plans WHERE document_id = ?", (doc_id,))
+    cursor.execute("DELETE FROM documents WHERE id = ?", (doc_id,))
+    conn.commit()
+    conn.close()
+
 def save_quiz(document_id, score, total_questions, weak_topics):
     conn = get_connection()
     cursor = conn.cursor()

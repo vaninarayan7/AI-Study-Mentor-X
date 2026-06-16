@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from utils.db_helper import init_db, save_document, get_all_documents, get_document, update_document_summary
+from utils.db_helper import init_db, save_document, get_all_documents, get_document, update_document_summary, delete_document
 from utils.pdf_reader import extract_text
 from utils.style_helper import apply_custom_style
 from utils.hf_helper import generate_summary
@@ -75,6 +75,30 @@ with st.sidebar:
                 st.session_state.pdf_name = doc_data['filename']
                 st.session_state.pdf_summary = doc_data['summary'] or ""
                 st.rerun()
+        
+        # Delete Selected Document Button
+        if st.button("🗑️ Delete Selected Document", use_container_width=True):
+            filename_to_delete = doc_options.get(selected_id)
+            if filename_to_delete:
+                file_path = os.path.join(UPLOAD_DIR, filename_to_delete)
+                if os.path.exists(file_path):
+                    try:
+                        os.remove(file_path)
+                    except Exception as e:
+                        st.error(f"Error deleting file: {e}")
+            
+            # Delete from database
+            delete_document(selected_id)
+            
+            # Clear session state
+            st.session_state.current_doc_id = None
+            st.session_state.pdf_text = ""
+            st.session_state.pdf_name = ""
+            st.session_state.pdf_summary = ""
+            
+            # Refresh the app
+            st.success("Document deleted successfully!")
+            st.rerun()
     else:
         st.info("No documents uploaded yet.")
 
