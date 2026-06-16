@@ -3,6 +3,22 @@ import os
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "database", "mentor.db")
 
+__all__ = [
+    'init_db',
+    'save_document',
+    'update_document_summary',
+    'get_document_count',
+    'get_all_documents',
+    'get_document',
+    'delete_document',
+    'save_quiz',
+    'get_quiz_history',
+    'get_average_score',
+    'get_weak_topics_list',
+    'save_study_plan',
+    'get_study_plan'
+]
+
 def get_connection():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
